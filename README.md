@@ -17,7 +17,9 @@ Programming in the FRC requires a ton of software/application/library downloads,
 
 ### Quick Links
 - https://docs.wpilib.org/en/latest/docs/getting-started/getting-started-frc-control-system/wpilib-setup.html is where to go to install WPILib.
-- https://docs.wpilib.org/en/latest/docs/getting-started/getting-started-frc-control-system/frc-game-tools.html is for the NI Update Suite and other game tools. 
+- https://docs.wpilib.org/en/latest/docs/getting-started/getting-started-frc-control-system/frc-game-tools.html is for the NI Update Suite and other game tools, including the radio configuration tool. 
+- https://www.ctr-electronics.com/control-system/hro.html#product_tabs_technical_resources contains the CTRE Phoenix Toolsuite installation. Select the latest installer, 5.17.6.0. (third-party installation)
+- https://pdocs.kauailabs.com/navx-mxp/software/roborio-libraries/java/ gives instructions on installing the navX library. Click the "Download" button on the right to automatically download the .zip file. (third-party installation)
 
 ### Programming Guides
 Anyone who is looking to code and thinks they can dedicate some time to programming (even if they really can't) should check out the following resources: 
