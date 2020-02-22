@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class IntakeSub extends SubsystemBase {
+public class ShooterSub extends SubsystemBase {
 
   private TalonSRX masterMotor;
   private TalonSRX followerMotor; 
@@ -20,23 +20,19 @@ public class IntakeSub extends SubsystemBase {
   /**
    * Creates a new IntakeSub.
    */
-  public IntakeSub(TalonSRX master, TalonSRX follower) {
+  public ShooterSub(TalonSRX master, TalonSRX follower) {
     masterMotor = master;
     followerMotor = follower;
     followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    masterMotor.configOpenloopRamp(1.0);
+    masterMotor.configOpenloopRamp(0.15);
   }
 
   public void forward() {
-    masterMotor.set(ControlMode.PercentOutput, 1.0);
+    masterMotor.set(ControlMode.PercentOutput, 0.30);
   }
 
   public void backward() {
-    masterMotor.set(ControlMode.PercentOutput, -1.0);
-  }
-  
-  public void stop(){
-    masterMotor.set(ControlMode.PercentOutput, 0);
+    masterMotor.set(ControlMode.PercentOutput, -0.30);
   }
 
   @Override

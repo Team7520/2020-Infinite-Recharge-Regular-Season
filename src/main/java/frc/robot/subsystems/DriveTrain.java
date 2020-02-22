@@ -29,9 +29,9 @@ import frc.robot.utilities.SpeedPlan;
 public class DriveTrain extends Subsystem {
 
   public WPI_TalonSRX leftMasterMotor;
-  private WPI_VictorSPX leftFollowerMotor;
+  private WPI_TalonSRX leftFollowerMotor;
   public WPI_TalonSRX rightMasterMotor;
-  private WPI_VictorSPX rightFollowerMotor;
+  private WPI_TalonSRX rightFollowerMotor;
   
   private NavX navX;
 
@@ -47,8 +47,8 @@ public class DriveTrain extends Subsystem {
 
   public boolean isInAuto = false; 
 
-  public DriveTrain(WPI_TalonSRX leftMasterMotor, WPI_VictorSPX leftFollowerMotor, 
-  WPI_TalonSRX rightMasterMotor, WPI_VictorSPX rightFollowerMotor, NavX navX) {
+  public DriveTrain(WPI_TalonSRX leftMasterMotor, WPI_TalonSRX leftFollowerMotor, 
+  WPI_TalonSRX rightMasterMotor, WPI_TalonSRX rightFollowerMotor, NavX navX) {
 		setLeftMotorGroup(leftMasterMotor, leftFollowerMotor);
 		setRightMotorGroup(rightMasterMotor, rightFollowerMotor);
 		this.navX = navX;
@@ -78,7 +78,7 @@ public class DriveTrain extends Subsystem {
    * Sets the robot's left master and follower motors.
   */
 
-  public void setLeftMotorGroup(WPI_TalonSRX leftMasterMotor, WPI_VictorSPX leftFollowerMotor) {
+  public void setLeftMotorGroup(WPI_TalonSRX leftMasterMotor, WPI_TalonSRX leftFollowerMotor) {
     this.leftMasterMotor = leftMasterMotor;
     this.leftFollowerMotor = leftFollowerMotor;
 	this.leftFollowerMotor.set(ControlMode.Follower, this.leftMasterMotor.getDeviceID());
@@ -89,7 +89,7 @@ public class DriveTrain extends Subsystem {
    * Sets the robot's right master and follower motors.
   */
 
-  public void setRightMotorGroup(WPI_TalonSRX rightMasterMotor, WPI_VictorSPX rightFollowerMotor) {
+  public void setRightMotorGroup(WPI_TalonSRX rightMasterMotor, WPI_TalonSRX rightFollowerMotor) {
     this.rightMasterMotor = rightMasterMotor;
     this.rightFollowerMotor = rightFollowerMotor;
 	this.rightFollowerMotor.set(ControlMode.Follower, this.rightMasterMotor.getDeviceID());

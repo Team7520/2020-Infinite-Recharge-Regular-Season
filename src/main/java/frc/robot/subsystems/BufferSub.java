@@ -7,36 +7,38 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class IntakeSub extends SubsystemBase {
-
-  private TalonSRX masterMotor;
-  private TalonSRX followerMotor; 
-
-  /**
-   * Creates a new IntakeSub.
-   */
-  public IntakeSub(TalonSRX master, TalonSRX follower) {
-    masterMotor = master;
-    followerMotor = follower;
-    followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    masterMotor.configOpenloopRamp(1.0);
-  }
-
-  public void forward() {
-    masterMotor.set(ControlMode.PercentOutput, 1.0);
-  }
-
-  public void backward() {
-    masterMotor.set(ControlMode.PercentOutput, -1.0);
-  }
+public class BufferSub extends SubsystemBase {
   
+//  private VictorSPX buffer;
+  private TalonFX buffer;
+  
+  /**
+   * Creates a new BufferSub.
+   */
+//  public BufferSub(VictorSPX buffer) {
+    public BufferSub(TalonFX buffer) {
+      this.buffer = buffer;
+  }
+
+  public void forwards(){
+    buffer.set(ControlMode.PercentOutput, 1.0);
+  }
+
+  public void backwards(){
+    buffer.set(ControlMode.PercentOutput, -1.0);
+  }
+
   public void stop(){
-    masterMotor.set(ControlMode.PercentOutput, 0);
+    buffer.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean direction(boolean forwards){
+    return forwards;
   }
 
   @Override

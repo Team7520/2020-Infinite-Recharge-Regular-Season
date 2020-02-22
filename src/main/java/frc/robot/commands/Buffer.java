@@ -7,40 +7,38 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Shoot extends CommandBase {
+import frc.robot.subsystems.*;
 
-  private IntakeSub m_intakeSub;
+public class Buffer extends CommandBase {
+
+  private BufferSub buffer;
 
   /**
-   * Creates a new Shooter.
+   * Creates a new Buffer.
    */
-  public Shoot(IntakeSub subsystem) {
+  public Buffer(BufferSub buffer) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_intakeSub = subsystem;
-    addRequirements(m_intakeSub);
+    this.buffer = buffer;
+    addRequirements(this.buffer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // stop the motor
-    // init flags, such as RPM reached desired value
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // To do: check status
-    m_intakeSub.forward();
+    buffer.forwards();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSub.stop();
+    buffer.stop();
   }
 
   // Returns true when the command should end.
