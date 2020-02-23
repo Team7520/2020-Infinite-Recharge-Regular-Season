@@ -90,7 +90,7 @@ public class DriveTrain extends Subsystem {
   */
 
   public void setRightMotorGroup(WPI_TalonSRX rightMasterMotor, WPI_TalonSRX rightFollowerMotor) {
-    this.rightMasterMotor = rightMasterMotor;
+	this.rightMasterMotor = rightMasterMotor;
     this.rightFollowerMotor = rightFollowerMotor;
 	this.rightFollowerMotor.set(ControlMode.Follower, this.rightMasterMotor.getDeviceID());
 	rightMasterMotor.configOpenloopRamp(0.15);
