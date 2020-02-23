@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,6 +26,7 @@ public class ShooterSub extends SubsystemBase {
     followerMotor = follower;
     followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
     masterMotor.configOpenloopRamp(0.15);
+    masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
   }
 
   public void forward() {
