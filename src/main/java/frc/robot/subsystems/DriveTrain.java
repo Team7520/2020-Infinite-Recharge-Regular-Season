@@ -53,6 +53,8 @@ public class DriveTrain extends Subsystem {
 		setRightMotorGroup(rightMasterMotor, rightFollowerMotor);
 		this.navX = navX;
 		getDriveTrain();
+		
+		
   }
 
   // Put methods for controlling this subsystem
@@ -83,7 +85,8 @@ public class DriveTrain extends Subsystem {
     this.leftFollowerMotor = leftFollowerMotor;
 	this.leftFollowerMotor.set(ControlMode.Follower, this.leftMasterMotor.getDeviceID());
 	leftMasterMotor.configOpenloopRamp(0.15);
-	leftFollowerMotor.configOpenloopRamp(0.15);
+	leftFollowerMotor.configOpenloopRamp(0.15);	
+	leftMasterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
   }
   /** 
    * Sets the robot's right master and follower motors.
@@ -95,6 +98,7 @@ public class DriveTrain extends Subsystem {
 	this.rightFollowerMotor.set(ControlMode.Follower, this.rightMasterMotor.getDeviceID());
 	rightMasterMotor.configOpenloopRamp(0.15);
 	rightFollowerMotor.configOpenloopRamp(0.15);
+	rightMasterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
   }
 
   /** 

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
 
 public class BufferSub extends SubsystemBase {
   
@@ -23,6 +25,7 @@ public class BufferSub extends SubsystemBase {
 //  public BufferSub(VictorSPX buffer) {
     public BufferSub(TalonFX buffer) {
       this.buffer = buffer;
+      buffer.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
   }
 
   public void forwards(){
