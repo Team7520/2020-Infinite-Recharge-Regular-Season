@@ -11,35 +11,53 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.*;
 
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSub extends SubsystemBase {
 
-  private TalonSRX masterMotor;
-  private TalonSRX followerMotor; 
+  private VictorSPX motor;
+  private DoubleSolenoid leftDoubleSolenoid;
+  private DoubleSolenoid rightDoubleSolenoid;
 
   /**
-   * Creates a new IntakeSub.
+   *  IntakeSub has a motor, and two  {@link DoubleSolenoid}.
+   *  if leftDoubleSolenoid and rightDoubleSolenoid share one controller, then only need one of 
+   *  leftDoubleSolenoid and rightDoubleSolenoid.
    */
-  public IntakeSub(TalonSRX master, TalonSRX follower) {
-    masterMotor = master;
-    followerMotor = follower;
-    followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    masterMotor.configOpenloopRamp(1.0);
-    masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+  public IntakeSub(VictorSPX motor, DoubleSolenoid leftDoubleSolenoid, DoubleSolenoid rightDoubleSolenoid) {
+    this.motor = motor;
+    motor.configOpenloopRamp(1.0);
+    //motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+
+    this.leftDoubleSolenoid = leftDoubleSolenoid;
+    this.rightDoubleSolenoid = rightDoubleSolenoid;
   } 
 
-
-  public void forward() {
-    masterMotor.set(ControlMode.PercentOutput, 1.0);
+  public void  DrawerSlideOut (){
+    leftDoubleSolenoid.set(kForward);
+    rightDoubleSolenoid.set(kForward);
   }
 
-  public void backward() {
-    masterMotor.set(ControlMode.PercentOutput, -1.0);
+  public void  DrawerSlideIn (){
+    leftDoubleSolenoid.set(kReverse);
+    rightDoubleSolenoid.set(kReverse);
+  }
+
+  public void rollingBallIn() {
+    motor.set(ControlMode.PercentOutput, 0.5);
+  }
+
+  public void rollingBallOut() {
+    motor.set(ControlMode.PercentOutput, -0.5);
   }
   
   public void stop(){
-    masterMotor.set(ControlMode.PercentOutput, 0);
+    motor.set(ControlMode.PercentOutput, 0);
   }
 
   @Override

@@ -36,6 +36,11 @@ public class ShooterSub extends SubsystemBase {
   public void backward() {
     masterMotor.set(ControlMode.PercentOutput, -0.30);
   }
+  
+  public void stop(){
+    masterMotor.set(ControlMode.PercentOutput, 0);
+  }
+
 
   @Override
   public void periodic() {

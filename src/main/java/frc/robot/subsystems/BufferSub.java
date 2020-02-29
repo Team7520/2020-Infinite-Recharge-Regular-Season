@@ -29,11 +29,11 @@ public class BufferSub extends SubsystemBase {
   }
 
   public void forwards(){
-    buffer.set(ControlMode.PercentOutput, 1.0);
+    buffer.set(ControlMode.PercentOutput, 0.5);
   }
 
   public void backwards(){
-    buffer.set(ControlMode.PercentOutput, -1.0);
+    buffer.set(ControlMode.PercentOutput, -0.5);
   }
 
   public void stop(){

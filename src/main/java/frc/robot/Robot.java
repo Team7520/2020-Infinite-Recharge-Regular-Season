@@ -48,34 +48,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-    // To do: need a flag, for example, 'Test Mode', only when it is turned on, show various 
-    // measures. Showing these measures on SmartDashBoard will cause loop time of 0.02s overrun
-
-    double magVel_UnitsPer100ms = m_robotContainer.shooterMotor1.getSelectedSensorVelocity(0);
-    double falcon500Vel_UnitsPer100ms = m_robotContainer.Falcon500.getSelectedSensorVelocity(0);
-		/**
-		 * Convert to RPM
-		 * https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
-		 * MagRPM = magVel [units/kT] * 600 [kTs/minute] / 4096(units/rev), where kT = 100ms
-		 */
-		double magVelRPM = magVel_UnitsPer100ms * 600 / 4096;
-		double falcon500Vel_RPM = falcon500Vel_UnitsPer100ms * 600 / 4096;
-
-    SmartDashboard.putNumber("Encoder QuadPosition", m_robotContainer.shooterMotor1.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Encoder RPM", magVelRPM);
-    SmartDashboard.putNumber("Falcon500 Abs Position", m_robotContainer.Falcon500.getSensorCollection().getIntegratedSensorAbsolutePosition());
-    SmartDashboard.putNumber("Falcon500 Position", m_robotContainer.Falcon500.getSensorCollection().getIntegratedSensorPosition());
-    SmartDashboard.putNumber("Falcon500 RPM", falcon500Vel_RPM);
-    //SmartDashboard.putNumber("Encoder via DIO", m_robotContainer.encoder.getDistance();//getQuadraturePosition());
-    SmartDashboard.putNumber("PDP Bus voltage", m_robotContainer.m_PDP.getVoltage());
-    SmartDashboard.putNumber("PDP Temperature", m_robotContainer.m_PDP.getTemperature());
-    SmartDashboard.putNumber("PDP Total Current", m_robotContainer.m_PDP.getTotalCurrent());
-    SmartDashboard.putNumber("PDP Total Energy", m_robotContainer.m_PDP.getTotalEnergy());
-    SmartDashboard.putNumber("PDP, Channel 0 (shooter 1), current", m_robotContainer.m_PDP.getCurrent(1));
-
-    //SmartDashboard.putNumber("PDP Bus voltage", m_robotContainer.shooterMotor1.getsens .m_PDP.getVoltage());
-
+    m_robotContainer.configDashboard();
   }
 
   /**

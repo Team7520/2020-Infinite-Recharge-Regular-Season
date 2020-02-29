@@ -10,18 +10,24 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.button.*;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class Buffer extends CommandBase {
 
   private BufferSub buffer;
+  private JoystickButton forwards;
+  private JoystickButton backwards;
 
   /**
    * Creates a new Buffer.
    */
-  public Buffer(BufferSub buffer) {
+  public Buffer(BufferSub buffer, JoystickButton forwards, JoystickButton backwards) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.buffer = buffer;
     addRequirements(this.buffer);
+    this.forwards = forwards;
+    this.backwards = backwards;
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +38,11 @@ public class Buffer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    buffer.forwards();
+    if(forwards.get()){
+      buffer.forwards();
+    } else if(backwards.get()){
+      buffer.backwards();
+    }  
   }
 
   // Called once the command ends or is interrupted.
