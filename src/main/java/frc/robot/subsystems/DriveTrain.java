@@ -49,12 +49,10 @@ public class DriveTrain extends Subsystem {
 
   public DriveTrain(WPI_TalonSRX leftMasterMotor, WPI_TalonSRX leftFollowerMotor, 
   WPI_TalonSRX rightMasterMotor, WPI_TalonSRX rightFollowerMotor, NavX navX) {
-		setLeftMotorGroup(leftMasterMotor, leftFollowerMotor);
-		setRightMotorGroup(rightMasterMotor, rightFollowerMotor);
-		this.navX = navX;
-		getDriveTrain();
-		
-		
+	setLeftMotorGroup(leftMasterMotor, leftFollowerMotor);
+	setRightMotorGroup(rightMasterMotor, rightFollowerMotor);
+	this.navX = navX;
+	getDriveTrain();	
   }
 
   // Put methods for controlling this subsystem

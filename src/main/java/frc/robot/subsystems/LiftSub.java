@@ -9,38 +9,42 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class ShooterSub extends SubsystemBase {
+public class LiftSub extends SubsystemBase {
 
-  private TalonFX masterMotor;
-  private TalonFX followerMotor; 
+  private TalonSRX masterMotor;
+  private TalonSRX followerMotor; 
 
-  private double minOutput;
-  private double maxOutput;
-  
   /**
    * Creates a new IntakeSub.
    */
-  public ShooterSub(TalonFX master, TalonFX follower) {
+  public LiftSub(TalonSRX master, TalonSRX follower) {
     masterMotor = master;
     followerMotor = follower;
-
     followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    followerMotor.setInverted(TalonFXInvertType.OpposeMaster);
-    // The slowest ramp possible is ten seconds (from neutral to full), though this is quite excessive.
-    masterMotor.configOpenloopRamp(3.0);
+    masterMotor.configOpenloopRamp(0.15);
     masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
-    masterMotor.configPeakOutputForward(0.40, 10);
-    masterMotor.configPeakOutputReverse(-0.40, 10);
   }
 
-  public void shoot(double speed) {
-    masterMotor.set(ControlMode.PercentOutput, speed);
+  public void armStretchUp() {
+    masterMotor.set(ControlMode.PercentOutput, 0.30);
+  }
+
+  public void armRelease() {
+    masterMotor.set(ControlMode.PercentOutput, 0.30);
+  }
+
+  public void ropeRollUp() {
+    masterMotor.set(ControlMode.PercentOutput, 0.30);
+  }
+
+  public void ropeReleaseDown() {
+    masterMotor.set(ControlMode.PercentOutput, -0.30);
   }
   
   public void stop(){
