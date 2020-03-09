@@ -13,19 +13,19 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.*;
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Buffer extends CommandBase {
+public class FeedCommand extends CommandBase {
 
-  private BufferSub buffer;
+  private FeederSub feeder;
   private JoystickButton forwards;
   private JoystickButton backwards;
 
   /**
    * Creates a new Buffer.
    */
-  public Buffer(BufferSub buffer, JoystickButton forwards, JoystickButton backwards) {
+  public FeedCommand(FeederSub buffer, JoystickButton forwards, JoystickButton backwards) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.buffer = buffer;
-    addRequirements(this.buffer);
+    this.feeder = buffer;
+    addRequirements(this.feeder);
     this.forwards = forwards;
     this.backwards = backwards;
   }
@@ -39,16 +39,16 @@ public class Buffer extends CommandBase {
   @Override
   public void execute() {
     if(forwards.get()){
-      buffer.forwards();
+      feeder.forwards();
     } else if(backwards.get()){
-      buffer.backwards();
-    }  
+      feeder.backwards();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    buffer.stop();
+    feeder.stop();
   }
 
   // Returns true when the command should end.

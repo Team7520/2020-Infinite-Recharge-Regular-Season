@@ -20,40 +20,38 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSub extends SubsystemBase {
 
-  private VictorSPX motor;
-  private DoubleSolenoid leftDoubleSolenoid;
-  private DoubleSolenoid rightDoubleSolenoid;
+  private TalonSRX motor;
+  private DoubleSolenoid intakeDoubleSolenoid;
 
   /**
    *  IntakeSub has a motor, and two  {@link DoubleSolenoid}.
    *  if leftDoubleSolenoid and rightDoubleSolenoid share one controller, then only need one of 
    *  leftDoubleSolenoid and rightDoubleSolenoid.
    */
-  public IntakeSub(VictorSPX motor, DoubleSolenoid leftDoubleSolenoid, DoubleSolenoid rightDoubleSolenoid) {
+  public IntakeSub(TalonSRX motor, DoubleSolenoid intakeDoubleSolenoid) {
     this.motor = motor;
     motor.configOpenloopRamp(1.0);
     //motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
 
-    this.leftDoubleSolenoid = leftDoubleSolenoid;
-    this.rightDoubleSolenoid = rightDoubleSolenoid;
+    this.intakeDoubleSolenoid = intakeDoubleSolenoid;
   } 
 
   public void  DrawerSlideOut (){
-    leftDoubleSolenoid.set(kForward);
-    rightDoubleSolenoid.set(kForward);
+    intakeDoubleSolenoid.set(kForward);
   }
 
   public void  DrawerSlideIn (){
-    leftDoubleSolenoid.set(kReverse);
-    rightDoubleSolenoid.set(kReverse);
+    intakeDoubleSolenoid.set(kReverse);
   }
 
-  public void rollingBallIn() {
-    motor.set(ControlMode.PercentOutput, 0.5);
+  public void rollingBallIn(double speed) {
+    motor.set(ControlMode.PercentOutput, speed);
+    System.out.println("Rolling ball in");
   }
 
-  public void rollingBallOut() {
-    motor.set(ControlMode.PercentOutput, -0.5);
+  public void rollingBallOut(double speed) {
+    motor.set(ControlMode.PercentOutput, -speed);
+    System.out.println("Rolling ball out");
   }
   
   public void stop(){

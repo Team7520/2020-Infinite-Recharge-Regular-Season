@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 
-public class BufferSub extends SubsystemBase {
+public class FeederSub extends SubsystemBase {
   
 //  private VictorSPX buffer;
   private TalonSRX buffer;
@@ -23,7 +23,7 @@ public class BufferSub extends SubsystemBase {
    * Creates a new BufferSub.
    */
 //  public BufferSub(VictorSPX buffer) {
-    public BufferSub(TalonSRX buffer) {
+    public FeederSub(TalonSRX buffer) {
       this.buffer = buffer;
       buffer.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
   }

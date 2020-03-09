@@ -20,15 +20,18 @@ public class LiftSub extends SubsystemBase {
   private TalonSRX masterMotor;
   private TalonSRX followerMotor; 
 
+  private DoubleSolenoid solenoid;
+
   /**
    * Creates a new IntakeSub.
    */
-  public LiftSub(TalonSRX master, TalonSRX follower) {
+  public LiftSub(TalonSRX master, TalonSRX follower, DoubleSolenoid solenoid) {
     masterMotor = master;
     followerMotor = follower;
     followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
     masterMotor.configOpenloopRamp(0.15);
     masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+    this.solenoid = solenoid;
   }
 
   public void armStretchUp() {
@@ -36,7 +39,7 @@ public class LiftSub extends SubsystemBase {
   }
 
   public void armRelease() {
-    masterMotor.set(ControlMode.PercentOutput, 0.30);
+    masterMotor.set(ControlMode.PercentOutput, -0.30);
   }
 
   public void ropeRollUp() {
