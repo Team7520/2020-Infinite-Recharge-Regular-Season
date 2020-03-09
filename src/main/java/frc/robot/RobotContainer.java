@@ -85,7 +85,7 @@ public class RobotContainer {
   public final PDP m_PDP;
 
   private final Command m_ShootCommand;
-  private final Command m_IntakeStartCmd;
+  private final Command m_IntakeTestCmd;
   
   private final Command m_FeedCommand;
   private final ExampleCommand m_autoCommand;
@@ -144,7 +144,7 @@ public class RobotContainer {
     m_DriveTrain = new DriveTrain(leftDrive1, leftDrive2, rightDrive1, rightDrive2, m_NavX);
     m_CameraSub = new CameraSub(camera1, camera2, camera3);
 
-    m_IntakeStartCmd = new IntakeStartCommand(m_IntakeSub, XboxControl, button2, button3);
+    m_IntakeTestCmd = new IntakeTestCommand(m_IntakeSub, XboxControl, button2, button3);
     m_ShootCommand = new Shoot(m_ShooterSub, XboxControl);
     m_FeedCommand = new FeedCommand(m_FeederSub, button5, button6);
     m_autoCommand = new ExampleCommand(m_exampleSubsystem);
@@ -160,10 +160,10 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    button1.whileHeld(m_IntakeStartCmd); //button1 and button2 move the intake in opposite directions
-    button2.whenPressed(m_IntakeStartCmd);
-    button3.whenPressed(m_IntakeStartCmd);
-    button4.whileHeld(m_IntakeStartCmd);
+    button1.whileHeld(m_IntakeTestCmd); //button1 and button2 move the intake in opposite directions
+    button2.whenPressed(m_IntakeTestCmd);
+    button3.whenPressed(m_IntakeTestCmd);
+    button4.whileHeld(m_IntakeTestCmd);
     button5.whileHeld(m_FeedCommand); //button5 and button6 move the buffer (feeder) in opposite directions
     button6.whileHeld(m_FeedCommand);
   }
@@ -213,9 +213,9 @@ public class RobotContainer {
     double rightTrigger = XboxControl.getRawAxis(3);
     
     if(leftTrigger > 0){
-      m_IntakeStartCmd.schedule();
+      m_IntakeTestCmd.schedule();
     } else if(rightTrigger > 0){
-      m_IntakeStartCmd.schedule();
+      m_IntakeTestCmd.schedule();
     }
   }
 

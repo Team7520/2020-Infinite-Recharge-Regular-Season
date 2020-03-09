@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class IntakeStartCommand extends CommandBase {
+public class IntakeTestCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSub intake;
   private Joystick XboxControl;
@@ -27,7 +27,7 @@ public class IntakeStartCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeStartCommand(IntakeSub subsystem, Joystick XboxControl, JoystickButton slideIn, JoystickButton slideOut) {
+  public IntakeTestCommand(IntakeSub subsystem, Joystick XboxControl, JoystickButton slideIn, JoystickButton slideOut) {
     intake = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -48,8 +48,12 @@ public class IntakeStartCommand extends CommandBase {
     double leftTrigger = XboxControl.getRawAxis(2);
     double rightTrigger = XboxControl.getRawAxis(3);
   
-    intake.rollingBallIn(leftTrigger);
-    intake.rollingBallOut(rightTrigger);
+    if(Math.abs(leftTrigger) > 0 )
+      intake.rollingBallIn(leftTrigger);
+    else if(Math.abs(rightTrigger) > 0 )
+      intake.rollingBallOut(rightTrigger);
+    else
+      intake.stopRolling();
 
     if(slideIn.get()){
       intake.DrawerSlideIn();

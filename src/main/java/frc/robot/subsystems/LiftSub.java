@@ -14,6 +14,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
 public class LiftSub extends SubsystemBase {
 
@@ -34,12 +36,12 @@ public class LiftSub extends SubsystemBase {
     this.solenoid = solenoid;
   }
 
-  public void armStretchUp() {
-    masterMotor.set(ControlMode.PercentOutput, 0.30);
+  public void armOpen() {
+    this.solenoid.set(kForward);
   }
 
-  public void armRelease() {
-    masterMotor.set(ControlMode.PercentOutput, -0.30);
+  public void armClose() {
+    this.solenoid.set(kReverse);
   }
 
   public void ropeRollUp() {

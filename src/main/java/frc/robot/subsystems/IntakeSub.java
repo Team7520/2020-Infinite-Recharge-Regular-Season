@@ -54,6 +54,11 @@ public class IntakeSub extends SubsystemBase {
     System.out.println("Rolling ball out");
   }
   
+  public void stopRolling() {
+    motor.set(ControlMode.PercentOutput, 0);
+    System.out.println("Stop rolling");
+  }
+  
   public void stop(){
     motor.set(ControlMode.PercentOutput, 0);
   }
