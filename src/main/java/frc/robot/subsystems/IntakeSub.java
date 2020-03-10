@@ -12,9 +12,9 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.*;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
+// import edu.wpi.first.wpilibj.DoubleSolenoid;
+// import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
+// import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
