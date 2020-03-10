@@ -21,27 +21,40 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSub extends SubsystemBase {
 
   private TalonSRX motor;
-  private DoubleSolenoid intakeDoubleSolenoid;
+  //private DoubleSolenoid intakeDoubleSolenoid;
+  private Solenoid intakeSingleSolenoid;
 
   /**
    *  IntakeSub has a motor, and two  {@link DoubleSolenoid}.
    *  if leftDoubleSolenoid and rightDoubleSolenoid share one controller, then only need one of 
    *  leftDoubleSolenoid and rightDoubleSolenoid.
+   * 
+   *  EDIT: Only one single solenoid is used for the intake drawer
    */
-  public IntakeSub(TalonSRX motor, DoubleSolenoid intakeDoubleSolenoid) {
-    this.motor = motor;
-    motor.configOpenloopRamp(1.0);
-    //motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+  //public IntakeSub(TalonSRX motor, DoubleSolenoid intakeDoubleSolenoid) {
+    
+  /**
+   * Creates a new IntakeSub.
+   */
+  public IntakeSub(TalonSRX motor, Solenoid intakeSingleSolenoid) {
+      this.motor = motor;
+    motor.configOpenloopRamp(0.3);
+    motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
 
-    this.intakeDoubleSolenoid = intakeDoubleSolenoid;
-  } 
+//    this.intakeDoubleSolenoid = intakeDoubleSolenoid;
+    this.intakeSingleSolenoid = intakeSingleSolenoid;
+} 
 
-  public void  DrawerSlideOut (){
-    intakeDoubleSolenoid.set(kForward);
+  public void  drawerSlideOut (){
+//    intakeDoubleSolenoid.set(kForward);
+    intakeSingleSolenoid.set(true);
+    System.out.println("Drawer slide out");
   }
 
-  public void  DrawerSlideIn (){
-    intakeDoubleSolenoid.set(kReverse);
+  public void  drawerSlideIn (){  
+//    intakeDoubleSolenoid.set(kReverse);
+    intakeSingleSolenoid.set(false);
+    System.out.println("Drawer slide in");
   }
 
   public void rollingBallIn(double speed) {

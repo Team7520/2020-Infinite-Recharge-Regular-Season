@@ -39,7 +39,7 @@ public class AutoIntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.DrawerSlideOut();
+    intake.drawerSlideOut();
     intake.rollingBallIn(m_speed);
 
   }
@@ -56,14 +56,14 @@ public class AutoIntakeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.stopRolling();
-    intake.DrawerSlideIn();
+    intake.drawerSlideIn();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     intake.stopRolling();
-    intake.DrawerSlideIn();
+    intake.drawerSlideIn();
     return false;
   }
 }

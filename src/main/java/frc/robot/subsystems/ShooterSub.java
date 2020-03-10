@@ -27,7 +27,7 @@ public class ShooterSub extends SubsystemBase {
   
   private double motorTargetRPM = 1000;
   /**
-   * Creates a new IntakeSub.
+   * Creates a new ShooterSub.
    */
   public ShooterSub(TalonFX master, TalonFX follower) {
     masterMotor = master;

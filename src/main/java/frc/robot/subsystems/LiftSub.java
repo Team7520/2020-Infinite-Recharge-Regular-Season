@@ -25,7 +25,7 @@ public class LiftSub extends SubsystemBase {
   private DoubleSolenoid solenoid;
 
   /**
-   * Creates a new IntakeSub.
+   * Creates a new LiftSub.
    */
   public LiftSub(TalonSRX master, TalonSRX follower, DoubleSolenoid solenoid) {
     masterMotor = master;
@@ -44,11 +44,11 @@ public class LiftSub extends SubsystemBase {
     this.solenoid.set(kReverse);
   }
 
-  public void ropeRollUp() {
+  public void winchLoosen() {
     masterMotor.set(ControlMode.PercentOutput, 0.30);
   }
 
-  public void ropeReleaseDown() {
+  public void winchTighten() {
     masterMotor.set(ControlMode.PercentOutput, -0.30);
   }
   

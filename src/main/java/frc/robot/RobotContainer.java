@@ -39,14 +39,23 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  */
 public class RobotContainer {
   
-  private Joystick XboxControl;
-  // public Button button1 = new Button();
-  private JoystickButton button1;
-  private JoystickButton button2;
-  private JoystickButton button3;
-  private JoystickButton button4;
-  private JoystickButton button5; //using these two for our buffer/feeder system
-  private JoystickButton button6;
+  private Joystick DriverControl;
+  private Joystick OperatorControl;
+  // public Button driveButton1 = new Button();
+  private JoystickButton driveButton1;
+  private JoystickButton driveButton2;
+  private JoystickButton driveButton3;
+  private JoystickButton driveButton4;
+  private JoystickButton driveButton5; //using these two for our buffer/feeder system
+  private JoystickButton driveButton6;
+
+  private JoystickButton opButton1;
+  private JoystickButton opButton2;
+  private JoystickButton opButton3;
+  private JoystickButton opButton4;
+  private JoystickButton opButton5;
+  private JoystickButton opButton6;
+
 
   private AHRS ahrs;
   public  Encoder encoder;
@@ -65,8 +74,12 @@ public class RobotContainer {
   private TalonSRX feederMotor;
   private TalonSRX intakeMotor;
 
-  private DoubleSolenoid intakeDoubleSolenoid;
+  private Solenoid intakeSingleSolenoid;
+  //private DoubleSolenoid intakeDoubleSolenoid;
   //private DoubleSolenoid intakeDrawerRight;
+  private DoubleSolenoid liftDoubleSolenoid;
+
+  private Solenoid cameraReflectLightSolenoid;
 
   private UsbCamera camera1;
   private UsbCamera camera2;
@@ -77,7 +90,8 @@ public class RobotContainer {
   private final IntakeSub m_IntakeSub;
   private final ShooterSub m_ShooterSub;
   private final FeederSub m_FeederSub;
-  //private final LiftSub m_LiftSub;
+  private final LiftSub m_LiftSub;
+  private final CameraReflectLight m_CameraReflectLight;
   //private final Falcon500Sub m_Falcon500Sub;
   private final DriveTrain m_DriveTrain;
   private final CameraSub m_CameraSub;
@@ -86,7 +100,8 @@ public class RobotContainer {
 
   private final Command m_ShootCommand;
   private final Command m_IntakeTestCmd;
-  
+  private final Command m_LiftCmd;
+  private final Command m_CameraLightCmd;
   private final Command m_FeedCommand;
   private final ExampleCommand m_autoCommand;
   Command m_autonomousCommand;
@@ -97,16 +112,25 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    XboxControl = new Joystick(1);
-    // public Button button1 = new Button() {
-    //   BooleanSupplier sup = () -> XboxControl.getRawButton(0);
+    DriverControl = new Joystick(1);
+    OperatorControl = new Joystick(2);
+    // public Button driveButton1 = new Button() {
+    //   BooleanSupplier sup = () -> DriverControl.getRawButton(0);
     // };
-    button1 = new JoystickButton(XboxControl, 1);
-    button2 = new JoystickButton(XboxControl, 2);
-    button3 = new JoystickButton(XboxControl, 3);
-    button4 = new JoystickButton(XboxControl, 4);
-    button5 = new JoystickButton(XboxControl, 5);
-    button6 = new JoystickButton(XboxControl, 6);
+    driveButton1 = new JoystickButton(DriverControl, 1);
+    driveButton2 = new JoystickButton(DriverControl, 2);
+    driveButton3 = new JoystickButton(DriverControl, 3);
+    driveButton4 = new JoystickButton(DriverControl, 4);
+    driveButton5 = new JoystickButton(DriverControl, 5);
+    driveButton6 = new JoystickButton(DriverControl, 6);
+
+    opButton1 = new JoystickButton(OperatorControl, 1);
+    opButton2 = new JoystickButton(OperatorControl, 2);
+    opButton3 = new JoystickButton(OperatorControl, 3);
+    opButton4 = new JoystickButton(OperatorControl, 4);
+    opButton5 = new JoystickButton(OperatorControl, 5);
+    opButton6 = new JoystickButton(OperatorControl, 6);
+    
 
     m_PDP = new PDP(); 
     ahrs = new AHRS(SPI.Port.kMXP);
@@ -129,26 +153,33 @@ public class RobotContainer {
     rightDrive1 = new WPI_TalonSRX(6); // Right back (master)
     rightDrive2 = new WPI_TalonSRX(5); // Right front (follower)
 
-    intakeDoubleSolenoid = new DoubleSolenoid(0, 1);
+    intakeSingleSolenoid = new Solenoid(0);
     //intakeDrawerRight = new DoubleSolenoid(2, 3);
+    liftDoubleSolenoid = new DoubleSolenoid(1, 2);
 
+    cameraReflectLightSolenoid = new Solenoid(7);
+    
     m_exampleSubsystem = new ExampleSubsystem();
     m_NavX = new NavX(ahrs);
-    m_IntakeSub = new IntakeSub(intakeMotor, intakeDoubleSolenoid);
+    m_IntakeSub = new IntakeSub(intakeMotor, intakeSingleSolenoid);
     m_ShooterSub = new ShooterSub(shooterMotor1, shooterMotor2);
-    //m_LiftSub = new LiftSub(liftMotor1, liftMotor2);
-
+    m_LiftSub = new LiftSub(liftMotor1, liftMotor2, liftDoubleSolenoid);
+    m_CameraReflectLight = new CameraReflectLight(cameraReflectLightSolenoid);
     m_FeederSub = new FeederSub(feederMotor);
     //m_Falcon500Sub = new Falcon500Sub(falcon500);
      
     m_DriveTrain = new DriveTrain(leftDrive1, leftDrive2, rightDrive1, rightDrive2, m_NavX);
     m_CameraSub = new CameraSub(camera1, camera2, camera3);
 
-    m_IntakeTestCmd = new IntakeTestCommand(m_IntakeSub, XboxControl, button2, button3);
-    m_ShootCommand = new Shoot(m_ShooterSub, XboxControl);
-    m_FeedCommand = new FeedCommand(m_FeederSub, button5, button6);
+    m_IntakeTestCmd = new IntakeTestCommand(m_IntakeSub, DriverControl, driveButton2, driveButton3);
+    m_LiftCmd = new LiftCommand(m_LiftSub, DriverControl, opButton5, opButton6, opButton1, opButton4);
+
+    m_ShootCommand = new Shoot(m_ShooterSub, DriverControl);
+    m_FeedCommand = new FeedCommand(m_FeederSub, driveButton5, driveButton6);
     m_autoCommand = new ExampleCommand(m_exampleSubsystem);
     
+    m_CameraLightCmd = new CameraLightCommand(m_CameraReflectLight, opButton2);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -156,16 +187,23 @@ public class RobotContainer {
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+   * edu.wpi.first.wpilibj.Joystick} or {@link DriverController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    button1.whileHeld(m_IntakeTestCmd); //button1 and button2 move the intake in opposite directions
-    button2.whenPressed(m_IntakeTestCmd);
-    button3.whenPressed(m_IntakeTestCmd);
-    button4.whileHeld(m_IntakeTestCmd);
-    button5.whileHeld(m_FeedCommand); //button5 and button6 move the buffer (feeder) in opposite directions
-    button6.whileHeld(m_FeedCommand);
+    //driveButton1.whenPressed(m_LiftCmd);
+    driveButton2.whenPressed(m_IntakeTestCmd); //driveButton2 and driveButton3 move the intake solenoid in opposite directions
+    driveButton3.whenPressed(m_IntakeTestCmd);
+    //driveButton4.whenPressed(m_LiftCmd);
+    driveButton5.whileHeld(m_FeedCommand); //driveButton5 and driveButton6 move the buffer (feeder) in opposite directions
+    driveButton6.whileHeld(m_FeedCommand);
+
+    opButton1.whenPressed(m_LiftCmd); //lift solenoid release
+    opButton4.whenPressed(m_LiftCmd); //lift solenoid retract
+    opButton5.whileHeld(m_LiftCmd); //lift winch loosen
+    opButton6.whileHeld(m_LiftCmd); //lift winch tighten
+
+    opButton2.whenPressed(m_CameraLightCmd);
   }
 
   public void configDashboard() {
@@ -200,17 +238,17 @@ public class RobotContainer {
   }
 
   public void checkJoystick(){
-    double driverLeftX = XboxControl.getRawAxis(0);
-    double driverLeftY = XboxControl.getRawAxis(1);
-    m_DriveTrain.move(driverLeftY, driverLeftX);
+    double driverLeftX = DriverControl.getRawAxis(0);
+    double driverLeftY = DriverControl.getRawAxis(1);
+    m_DriveTrain.move(-0.7*driverLeftY, 0.7*driverLeftX);
 
-    double driverRightY = XboxControl.getRawAxis(5);
+    double driverRightY = DriverControl.getRawAxis(5);
     if(Math.abs(driverRightY) > 0){
       m_ShootCommand.schedule();
     }
 
-    double leftTrigger = XboxControl.getRawAxis(2);
-    double rightTrigger = XboxControl.getRawAxis(3);
+    double leftTrigger = DriverControl.getRawAxis(2);
+    double rightTrigger = DriverControl.getRawAxis(3);
     
     if(leftTrigger > 0){
       m_IntakeTestCmd.schedule();
