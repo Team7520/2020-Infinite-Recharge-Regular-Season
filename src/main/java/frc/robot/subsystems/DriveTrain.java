@@ -47,6 +47,9 @@ public class DriveTrain extends Subsystem {
 
   public boolean isInAuto = false; 
 
+  /**
+   * Creates a new DriveTrain subsystem.
+   */
   public DriveTrain(WPI_TalonSRX leftMasterMotor, WPI_TalonSRX leftFollowerMotor, 
   WPI_TalonSRX rightMasterMotor, WPI_TalonSRX rightFollowerMotor, NavX navX) {
 	setLeftMotorGroup(leftMasterMotor, leftFollowerMotor);

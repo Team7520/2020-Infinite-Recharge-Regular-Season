@@ -20,7 +20,7 @@ public class FeederSub extends SubsystemBase {
   private TalonSRX buffer;
   
   /**
-   * Creates a new BufferSub.
+   * Creates a new FeederSub.
    */
 //  public BufferSub(VictorSPX buffer) {
     public FeederSub(TalonSRX buffer) {

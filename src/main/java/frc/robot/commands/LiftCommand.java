@@ -7,36 +7,42 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.LiftSub;
 import edu.wpi.first.wpilibj2.command.button.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * A command to control the LiftSub subsystem.
  */
-public class IntakeTestCommand extends CommandBase {
+public class LiftCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSub intake;
+  private final LiftSub lift;
   private Joystick XboxControl;
-  private JoystickButton slideIn; 
-  private JoystickButton slideOut;
+  private JoystickButton up;
+  private JoystickButton down;
+  private JoystickButton open;
+  private JoystickButton close;
 
   /**
-   * Creates a new IntakeTestCommand.
+   * Creates a new LiftCommand.
    *
-   * @param subsystem The IntakeSub subsystem used by this command.
-   * @param XboxControl The Joystick controlling the intake subsystem.
-   * @param slideIn The button to retract the intake drawer.
-   * @param slideOut The button to extend the intake drawer.
+   * @param lift The LiftSub subsystem used by this command.
+   * @param XboxControl The Joystick controlling the lift subsystem.
+   * @param up The button to loosen the lift winch.
+   * @param down The button to tighten the lift winch.
+   * @param open The button to bring the lift arm up.
+   * @param down The button to bring the lift arm down.
    */
-  public IntakeTestCommand(IntakeSub subsystem, Joystick XboxControl, JoystickButton slideIn, JoystickButton slideOut) {
-    intake = subsystem;
+  public LiftCommand(LiftSub lift, Joystick XboxControl, JoystickButton up, JoystickButton down, JoystickButton open, JoystickButton close) {
+    this.lift = lift;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(lift);
     this.XboxControl = XboxControl;
-    this.slideIn = slideIn;
-    this.slideOut = slideOut;
+    this.up = up;
+    this.down = down;
+    this.open = open;
+    this.close = close;
   }
 
   // Called when the command is initially scheduled.
@@ -48,27 +54,25 @@ public class IntakeTestCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftTrigger = XboxControl.getRawAxis(2);
-    double rightTrigger = XboxControl.getRawAxis(3);
-    System.out.println("left_trigger="+leftTrigger+" right_trigger="+rightTrigger);
-    if(Math.abs(leftTrigger) > 0 )
-      intake.rollingBallIn(leftTrigger);
-    else if(Math.abs(rightTrigger) > 0 )
-      intake.rollingBallOut(rightTrigger);
-    //else
-      //intake.stopRolling();
-    
-    if(slideIn.get()){
-      intake.drawerSlideIn();
-    } else if(slideOut.get()){
-      intake.drawerSlideOut();
+    if(open.get()){
+        lift.armOpen();
+    } else if(close.get()){
+        lift.armClose();
+    }
+
+    if(up.get()){
+        lift.winchLoosen();
+    } else if(down.get()){
+        lift.winchTighten();
+    } else {
+        lift.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stop();
+    lift.stop();
   }
 
   // Returns true when the command should end.
