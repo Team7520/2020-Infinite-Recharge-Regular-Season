@@ -224,17 +224,15 @@ public class RobotContainer {
 
   }
 
-  public void configDashboard_new() {
-/*    
-    SmartDashboard.putString("Auton Chooser", " select before each game");
-    //m_oi = new OI();
-    m_autoChooser.addOption("Hatch In (up)", hatchIn.getInstance());
-    m_autoChooser.addOption("Hatch Out (down)", hatchOut.getInstance());
-    m_autoChooser.addOption("Hatch In and Out", CommandGroupTest.getInstance()); //testing commandgroups
-    m_autoChooser.addOption("Collect Bar Up", new CollectBarRaising());
-    m_autoChooser.addOption("Auton Side Cargo Panel", new AutonSideCargoPanel());
-    m_autoChooser.setDefaultOption("Cross Hab Line (Default Auto)", AutonCrossHabLine.getInstance());
-*/
+  public void configAutoChooser() {
+    
+    SmartDashboard.putString("Auto Chooser", " select before each game");
+    //m_autoChooser.addOption("Hatch In and Out", CommandGroupTest.getInstance()); 
+    ////testing commandgroups
+    //m_autoChooser.addOption("Collect Bar Up", new CollectBarRaising());
+    m_autoChooser.addOption("Auto Do Nothing", new AutoDoNothing(m_exampleSubsystem));
+    m_autoChooser.setDefaultOption("Shoot (Default Auto)", new AutoShootCommand(m_ShooterSub));
+
   }
 
   public void checkJoystick(){
