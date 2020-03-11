@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,64 +7,50 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.IntakeSub;
-import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 
-/**
- * An example command that uses an example subsystem.
- */
-public class AutoIntakeCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSub intake;
-  public double m_timeout = 2;
-  private double m_speed;  
-  private final Timer m_timer = new Timer();
+public class AutoShootCommand extends CommandBase {
+
+  private ShooterSub m_shooterSub;
+  private double m_speed = 0.1;
+  private double m_distance = 20; // feet
+
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new Shooter.
    */
-  public AutoIntakeCommand(IntakeSub subsystem, double speed, double timeout) {
-    intake = subsystem;
+  public AutoShootCommand(ShooterSub subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    m_shooterSub = subsystem;
+    addRequirements(m_shooterSub);
 
-    m_speed = speed;
-    m_timeout = timeout;
-
-    m_timer.start();
   }
+
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.DrawerSlideOut();
-    intake.rollingBallIn(m_speed);
-
+    // stop the motor
+    // init flags, such as RPM reached desired value
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_timer.hasElapsed(m_timeout))
-      end(false);
-
+    // To do: check status
+    m_shooterSub.shoot(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stopRolling();
-    intake.DrawerSlideIn();
+    m_shooterSub.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_timer.hasElapsed(m_timeout))
-      return(true);
-
     return false;
   }
 }
