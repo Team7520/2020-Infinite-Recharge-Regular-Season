@@ -74,7 +74,6 @@ public class IntakeTestCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    intake.stop();
     return false;
   }
 }
