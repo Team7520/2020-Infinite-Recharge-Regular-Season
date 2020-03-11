@@ -12,27 +12,29 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Solenoid;
+// import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
 public class LiftSub extends SubsystemBase {
 
-  private TalonSRX masterMotor;
-  private TalonSRX followerMotor; 
+  private TalonSRX motor1;
+  private TalonSRX motor2;
 
   private DoubleSolenoid solenoid;
 
   /**
    * Creates a new LiftSub.
    */
-  public LiftSub(TalonSRX master, TalonSRX follower, DoubleSolenoid solenoid) {
-    masterMotor = master;
-    followerMotor = follower;
-    followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    masterMotor.configOpenloopRamp(0.15);
-    masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+  public LiftSub(TalonSRX motor1, TalonSRX motor2, DoubleSolenoid solenoid) {
+    this.motor1 = motor1;
+    this.motor2 = motor2;
+    //followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
+    motor1.configOpenloopRamp(0.15);
+    motor1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+    motor2.configOpenloopRamp(0.15);
+    motor2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
     this.solenoid = solenoid;
   }
 
@@ -45,15 +47,18 @@ public class LiftSub extends SubsystemBase {
   }
 
   public void winchLoosen() {
-    masterMotor.set(ControlMode.PercentOutput, 0.30);
+    motor1.set(ControlMode.PercentOutput, 0.30);
+    motor2.set(ControlMode.PercentOutput, 0.30);
   }
 
   public void winchTighten() {
-    masterMotor.set(ControlMode.PercentOutput, -0.30);
+    motor1.set(ControlMode.PercentOutput, -0.30);
+    motor2.set(ControlMode.PercentOutput, -0.30);
   }
   
   public void stop(){
-    masterMotor.set(ControlMode.PercentOutput, 0);
+    motor1.set(ControlMode.PercentOutput, 0);
+    motor2.set(ControlMode.PercentOutput, 0);
   }
 
 
