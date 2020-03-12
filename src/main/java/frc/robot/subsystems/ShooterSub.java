@@ -8,13 +8,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSub extends SubsystemBase {
@@ -28,8 +28,12 @@ public class ShooterSub extends SubsystemBase {
   private double m_newMotorOutput;
   private double m_lastMotorOutput;
   
+  private final double motorSpeed = 0.2;
+  private final double maxDeltaSpeed = 0.2;
+  private final double decelRate = 1/(6*10);
+  
   private double motorTargetRPM = 1000;
-  private double diffToleranceRPM = 100; // different from target RPM in reange [ -100, +100] 
+  private final double diffToleranceRPM = 75; // different from target RPM in range [-diffToleranceRPM, +diffToleranceRPM] 
   private boolean m_inAutoCommand = false;
   private double m_distance = 10.0;
 
@@ -40,22 +44,31 @@ public class ShooterSub extends SubsystemBase {
     this.motor1 = motor1;
     this.motor2 = motor2;
 
-    // The slowest ramp possible is ten seconds (from neutral to full), though this is quite excessive.
-    motor1.configOpenloopRamp(3.0);
-    motor1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
-    motor1.configPeakOutputForward(0.40, 10);
-    motor1.configPeakOutputReverse(-0.40, 10);
+    motor1.setNeutralMode(NeutralMode.Coast);
+    motor2.setNeutralMode(NeutralMode.Coast);
 
-    motor2.configOpenloopRamp(3.0);
+    // The slowest ramp possible is ten seconds (from neutral to full), though this is quite excessive.
+    motor1.configOpenloopRamp(4.0);
+    motor1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+    motor1.configPeakOutputForward(motorSpeed, 10);
+    motor1.configPeakOutputReverse(-motorSpeed, 10);
+
+    motor2.configOpenloopRamp(4.0);
     motor2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
-    motor2.configPeakOutputForward(0.40, 10);
-    motor2.configPeakOutputReverse(-0.40, 10);
+    motor2.configPeakOutputForward(motorSpeed, 10);
+    motor2.configPeakOutputReverse(-motorSpeed, 10);
 
     m_newMotorOutput = 0;
     m_lastMotorOutput = 0;
   }
 
   public void shoot(double speed) {
+    if((m_lastMotorOutput - speed)/m_lastMotorOutput > maxDeltaSpeed 
+        && speed > 0 && m_lastMotorOutput > 0){
+      System.out.println("speed before: " + speed);
+      speed = m_lastMotorOutput - decelRate;
+      System.out.println("m_lastMotorOutput: " + m_lastMotorOutput + ", speed: " + speed);
+    }
     motor1.set(ControlMode.PercentOutput, speed);
     motor2.set(ControlMode.PercentOutput, -speed);
     m_lastMotorOutput = speed;
@@ -118,7 +131,7 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public boolean lowerThanMotorTargetRPM() {
-    double motorRPM = getMotorRPM();
+    double motorRPM = getMotor1RPM();
 
     if (motorRPM < motorTargetRPM - diffToleranceRPM)
        return true;
@@ -128,7 +141,7 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public boolean higherThanMotorTargetRPM() {
-    double motorRPM = getMotorRPM();
+    double motorRPM = getMotor1RPM();
 
     if (motorRPM > motorTargetRPM + diffToleranceRPM)
        return true;
@@ -142,7 +155,7 @@ public class ShooterSub extends SubsystemBase {
     // if (!lowerThanMotorTargetRPM() && !higherThanMotorTargetRPM())
     //      return true;
 
-    double motorRPM = getMotorRPM();
+    double motorRPM = getMotor1RPM();
 
     if (motorRPM >= motorTargetRPM - diffToleranceRPM &&
         motorRPM <= motorTargetRPM + diffToleranceRPM)

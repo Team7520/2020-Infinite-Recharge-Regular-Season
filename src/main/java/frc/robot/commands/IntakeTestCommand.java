@@ -50,13 +50,12 @@ public class IntakeTestCommand extends CommandBase {
   public void execute() {
     double leftTrigger = XboxControl.getRawAxis(2);
     double rightTrigger = XboxControl.getRawAxis(3);
-    System.out.println("left_trigger="+leftTrigger+" right_trigger="+rightTrigger);
     if(Math.abs(leftTrigger) > 0 )
       intake.rollingBallIn(leftTrigger);
     else if(Math.abs(rightTrigger) > 0 )
       intake.rollingBallOut(rightTrigger);
-    //else
-      //intake.stopRolling();
+    else
+      intake.stopRolling();
     
     if(slideIn.get()){
       intake.drawerSlideIn();

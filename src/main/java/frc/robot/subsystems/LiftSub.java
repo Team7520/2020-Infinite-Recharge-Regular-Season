@@ -47,13 +47,13 @@ public class LiftSub extends SubsystemBase {
   }
 
   public void winchLoosen() {
-    motor1.set(ControlMode.PercentOutput, 0.30);
-    motor2.set(ControlMode.PercentOutput, 0.30);
+    motor1.set(ControlMode.PercentOutput, 1);
+    motor2.set(ControlMode.PercentOutput, 1);
   }
 
   public void winchTighten() {
-    motor1.set(ControlMode.PercentOutput, -0.30);
-    motor2.set(ControlMode.PercentOutput, -0.30);
+    motor1.set(ControlMode.PercentOutput, -1);
+    motor2.set(ControlMode.PercentOutput, -1);
   }
   
   public void stop(){

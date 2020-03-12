@@ -211,8 +211,9 @@ public class RobotContainer {
     // measures. Showing these measures on SmartDashBoard will cause loop time of 0.02s overrun
 
     m_ShooterSub.showValues();
-
-    //SmartDashboard.putNumber("Encoder via DIO", encoder.getDistance();//getQuadraturePosition());
+    configAutoChooser();
+    //SmartDashboard.putNumber("Encoder via DIO", encoder.getDistance();//getQuadraturePosition());.
+    SmartDashboard.putData("NavX", m_NavX);
     SmartDashboard.putNumber("PDP Bus voltage", m_PDP.getVoltage());
     SmartDashboard.putNumber("PDP Temperature", m_PDP.getTemperature());
     SmartDashboard.putNumber("PDP Total Current", m_PDP.getTotalCurrent());
@@ -227,6 +228,7 @@ public class RobotContainer {
   public void configAutoChooser() {
     
     SmartDashboard.putString("Auto Chooser", " select before each game");
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
     //m_autoChooser.addOption("Hatch In and Out", CommandGroupTest.getInstance()); 
     ////testing commandgroups
     //m_autoChooser.addOption("Collect Bar Up", new CollectBarRaising());
@@ -238,7 +240,7 @@ public class RobotContainer {
   public void checkJoystick(){
     double driverLeftX = DriverControl.getRawAxis(0);
     double driverLeftY = DriverControl.getRawAxis(1);
-    m_DriveTrain.move(-0.7*driverLeftY, 0.7*driverLeftX);
+    m_DriveTrain.move(-driverLeftY, driverLeftX);
 
     double driverRightY = DriverControl.getRawAxis(5);
     if(Math.abs(driverRightY) > 0){
@@ -262,7 +264,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    m_autonomousCommand = m_autoChooser.getSelected();
+    return m_autonomousCommand;
   }
 
 }

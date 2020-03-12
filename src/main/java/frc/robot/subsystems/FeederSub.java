@@ -29,11 +29,11 @@ public class FeederSub extends SubsystemBase {
   }
 
   public void forwards(){
-    buffer.set(ControlMode.PercentOutput, 0.5);
+    buffer.set(ControlMode.PercentOutput, 1);
   }
 
   public void backwards(){
-    buffer.set(ControlMode.PercentOutput, -0.5);
+    buffer.set(ControlMode.PercentOutput, -1);
   }
 
   public void stop(){

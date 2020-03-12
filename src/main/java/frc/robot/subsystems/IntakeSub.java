@@ -48,28 +48,23 @@ public class IntakeSub extends SubsystemBase {
   public void  drawerSlideOut (){
 //    intakeDoubleSolenoid.set(kForward);
     intakeSingleSolenoid.set(true);
-    System.out.println("Drawer slide out");
   }
 
   public void  drawerSlideIn (){  
 //    intakeDoubleSolenoid.set(kReverse);
     intakeSingleSolenoid.set(false);
-    System.out.println("Drawer slide in");
   }
 
   public void rollingBallIn(double speed) {
     motor.set(ControlMode.PercentOutput, speed);
-    System.out.println("Rolling ball in");
   }
 
   public void rollingBallOut(double speed) {
     motor.set(ControlMode.PercentOutput, -speed);
-    System.out.println("Rolling ball out");
   }
   
   public void stopRolling() {
     motor.set(ControlMode.PercentOutput, 0);
-    System.out.println("Stop rolling");
   }
   
   public void stop(){
