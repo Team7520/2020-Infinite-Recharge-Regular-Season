@@ -231,7 +231,7 @@ public class RobotContainer {
     ////testing commandgroups
     //m_autoChooser.addOption("Collect Bar Up", new CollectBarRaising());
     m_autoChooser.addOption("Auto Do Nothing", new AutoDoNothing(m_exampleSubsystem));
-    m_autoChooser.setDefaultOption("Shoot (Default Auto)", new AutoShootCommand(m_ShooterSub));
+    m_autoChooser.setDefaultOption("Shoot (Default Auto)", new AutoShootCommand(m_ShooterSub, m_FeederSub, 10.0));
 
   }
 

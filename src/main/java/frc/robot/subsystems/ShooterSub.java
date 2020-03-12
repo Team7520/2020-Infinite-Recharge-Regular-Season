@@ -24,8 +24,15 @@ public class ShooterSub extends SubsystemBase {
 
   private double minOutput;
   private double maxOutput;
+
+  private double m_newMotorOutput;
+  private double m_lastMotorOutput;
   
   private double motorTargetRPM = 1000;
+  private double diffToleranceRPM = 100; // different from target RPM in reange [ -100, +100] 
+  private boolean m_inAutoCommand = false;
+  private double m_distance = 10.0;
+
   /**
    * Creates a new ShooterSub.
    */
@@ -40,18 +47,33 @@ public class ShooterSub extends SubsystemBase {
     masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
     masterMotor.configPeakOutputForward(0.40, 10);
     masterMotor.configPeakOutputReverse(-0.40, 10);
+
+    m_newMotorOutput = 0;
+    m_lastMotorOutput = 0;
   }
 
   public void shoot(double speed) {
     masterMotor.set(ControlMode.PercentOutput, speed);
   }
   
+  public void setMotorOutput(double motorOuput) {
+    masterMotor.set(ControlMode.PercentOutput, motorOuput);
+    m_lastMotorOutput = motorOuput;
+  }
+
   public void stop(){
     masterMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public double getMotorTargetRPM() {
     return motorTargetRPM;
+  }
+
+  public void SetTargetDistance(double distance) {
+    m_distance = distance;
+
+    // To do, find out correct match of RPM and distance
+    motorTargetRPM = m_distance * 20;
   }
 
   public void SetMotorTargetRPM(double rpm) {
@@ -77,6 +99,41 @@ public class ShooterSub extends SubsystemBase {
     return motor_RPM;
   }
 
+  public boolean lowerThanMotorTargetRPM() {
+    double motorRPM = getMotorRPM();
+
+    if (motorRPM < motorTargetRPM - diffToleranceRPM)
+       return true;
+       
+    return false;
+        
+  }
+
+  public boolean higherThanMotorTargetRPM() {
+    double motorRPM = getMotorRPM();
+
+    if (motorRPM > motorTargetRPM + diffToleranceRPM)
+       return true;
+       
+    return false;
+        
+  }
+
+  public boolean reachedMotorTargetRPM() {
+    // it will call getMotorRPM() 2 times and get 2 different values
+    // if (!lowerThanMotorTargetRPM() && !higherThanMotorTargetRPM())
+    //      return true;
+
+    double motorRPM = getMotorRPM();
+
+    if (motorRPM >= motorTargetRPM - diffToleranceRPM &&
+        motorRPM <= motorTargetRPM + diffToleranceRPM)
+       return true;
+    
+    return false;
+
+  }
+
   public double getFlyWheelRPM() {
 		double motor_RPM = getMotorRPM();
 
@@ -92,9 +149,9 @@ public class ShooterSub extends SubsystemBase {
 
     double flyWheel_RPM = getFlyWheelRPM();
     double flyWheelRadius = 3; // inches
-    double shootingSpeedSpeed = flyWheel_RPM * 2 * flyWheelRadius * 3.14159 / 12; // feet
+    double shootingSpeed = flyWheel_RPM * 2 * flyWheelRadius * 3.14159 / 12; // feet
 
-    return shootingSpeedSpeed;
+    return shootingSpeed;
   }
   
   public void showValues() {  
@@ -105,8 +162,34 @@ public class ShooterSub extends SubsystemBase {
     SmartDashboard.putNumber("Shooting Speed (feet)", getShootingSpeed());
   }
 
+  public void setInAutoCommand(boolean inAutoCommand) {
+    m_inAutoCommand = inAutoCommand;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (!m_inAutoCommand)
+      return;
+
+    // stage 1: speed up
+    // stage 2: keep target RPM and shoot 
+    // stage 3: slow down 
+    
+    double alphaOutput = 1.0 / (3 * 50); // 3 seconds, 50 loops per second
+    if(reachedMotorTargetRPM())
+      m_newMotorOutput = m_lastMotorOutput;
+    else if (lowerThanMotorTargetRPM())
+      m_newMotorOutput += alphaOutput;
+    else if (higherThanMotorTargetRPM())
+      m_newMotorOutput -= alphaOutput;
+
+    if (m_newMotorOutput > 1.0)
+      m_newMotorOutput = 1.0;
+
+    if (m_newMotorOutput < 0)
+      m_newMotorOutput = 0;
+      
+    setMotorOutput(m_newMotorOutput); 
   }
 }
