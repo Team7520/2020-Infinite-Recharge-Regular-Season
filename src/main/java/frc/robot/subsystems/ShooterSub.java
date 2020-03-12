@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSub extends SubsystemBase {
 
-  private TalonFX masterMotor;
-  private TalonFX followerMotor; 
+  private TalonFX motor1;
+  private TalonFX motor2; 
 
   private double minOutput;
   private double maxOutput;
@@ -36,33 +36,34 @@ public class ShooterSub extends SubsystemBase {
   /**
    * Creates a new ShooterSub.
    */
-  public ShooterSub(TalonFX master, TalonFX follower) {
-    masterMotor = master;
-    followerMotor = follower;
+  public ShooterSub(TalonFX motor1, TalonFX motor2) {
+    this.motor1 = motor1;
+    this.motor2 = motor2;
 
-    followerMotor.set(ControlMode.Follower, masterMotor.getDeviceID());
-    followerMotor.setInverted(TalonFXInvertType.OpposeMaster);
     // The slowest ramp possible is ten seconds (from neutral to full), though this is quite excessive.
-    masterMotor.configOpenloopRamp(3.0);
-    masterMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
-    masterMotor.configPeakOutputForward(0.40, 10);
-    masterMotor.configPeakOutputReverse(-0.40, 10);
+    motor1.configOpenloopRamp(3.0);
+    motor1.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+    motor1.configPeakOutputForward(0.40, 10);
+    motor1.configPeakOutputReverse(-0.40, 10);
+
+    motor2.configOpenloopRamp(3.0);
+    motor2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 0, 120, 1.5));
+    motor2.configPeakOutputForward(0.40, 10);
+    motor2.configPeakOutputReverse(-0.40, 10);
 
     m_newMotorOutput = 0;
     m_lastMotorOutput = 0;
   }
 
   public void shoot(double speed) {
-    masterMotor.set(ControlMode.PercentOutput, speed);
-  }
-  
-  public void setMotorOutput(double motorOuput) {
-    masterMotor.set(ControlMode.PercentOutput, motorOuput);
-    m_lastMotorOutput = motorOuput;
+    motor1.set(ControlMode.PercentOutput, speed);
+    motor2.set(ControlMode.PercentOutput, -speed);
+    m_lastMotorOutput = speed;
   }
 
   public void stop(){
-    masterMotor.set(ControlMode.PercentOutput, 0);
+    motor1.set(ControlMode.PercentOutput, 0);
+    motor2.set(ControlMode.PercentOutput, 0);
   }
 
   public double getMotorTargetRPM() {
@@ -80,15 +81,32 @@ public class ShooterSub extends SubsystemBase {
     motorTargetRPM = rpm;
   }
 
-  public double getMotorPosition() {
+  public double getMotor1Position() {
     // Falcon 500 Abs Position
-    double motorPosition = masterMotor.getSensorCollection().getIntegratedSensorAbsolutePosition();
+    double motorPosition = motor1.getSensorCollection().getIntegratedSensorAbsolutePosition();
+    return motorPosition;
+  }
 
+  public double getMotor2Position() {
+    // Falcon 500 Abs Position
+    double motorPosition = motor2.getSensorCollection().getIntegratedSensorAbsolutePosition();
     return motorPosition;
   }
   
-  public double getMotorRPM() {
-    double magVel_UnitsPer100ms = masterMotor.getSelectedSensorVelocity(0);
+  public double getMotor1RPM() {
+    double magVel_UnitsPer100ms = motor1.getSelectedSensorVelocity(0);
+		/**
+		 * Convert to RPM
+		 * https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
+		 * MagRPM = magVel [units/kT] * 600 [kTs/minute] / 4096(units/rev), where kT = 100ms
+		 */
+		double motor_RPM = magVel_UnitsPer100ms * 600 / 4096;
+
+    return motor_RPM;
+  }
+
+  public double getMotor2RPM() {
+    double magVel_UnitsPer100ms = motor2.getSelectedSensorVelocity(0);
 		/**
 		 * Convert to RPM
 		 * https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
@@ -135,9 +153,9 @@ public class ShooterSub extends SubsystemBase {
   }
 
   public double getFlyWheelRPM() {
-		double motor_RPM = getMotorRPM();
+		double motor_RPM = (getMotor1RPM() + getMotor2RPM()) / 2;
 
-    double ratio = 2.2222;
+    double ratio = 20/9;
     double flyWheel_RPM = motor_RPM * ratio; 
 
     return flyWheel_RPM;
@@ -149,15 +167,17 @@ public class ShooterSub extends SubsystemBase {
 
     double flyWheel_RPM = getFlyWheelRPM();
     double flyWheelRadius = 3; // inches
-    double shootingSpeed = flyWheel_RPM * 2 * flyWheelRadius * 3.14159 / 12; // feet
+    double shootingSpeed = flyWheel_RPM * 2 * flyWheelRadius * Math.PI / 12; // feet
 
     return shootingSpeed;
   }
   
   public void showValues() {  
-    SmartDashboard.putNumber("Shooter Motor Position", getMotorPosition());
+    SmartDashboard.putNumber("Shooter Falcon 1 Position", getMotor1Position());
+    SmartDashboard.putNumber("Shooter Falcon 2 Position", getMotor2Position());
     SmartDashboard.putNumber("Shooter Motor Target RPM", getMotorTargetRPM());
-    SmartDashboard.putNumber("Shooter Motor RPM", getMotorRPM());
+    SmartDashboard.putNumber("Shooter Falcon 1 RPM", getMotor1RPM());
+    SmartDashboard.putNumber("Shooter Falcon 2 RPM", getMotor2RPM());
     SmartDashboard.putNumber("Shooter FlyWheel RPM", getFlyWheelRPM());
     SmartDashboard.putNumber("Shooting Speed (feet)", getShootingSpeed());
   }
@@ -190,6 +210,6 @@ public class ShooterSub extends SubsystemBase {
     if (m_newMotorOutput < 0)
       m_newMotorOutput = 0;
       
-    setMotorOutput(m_newMotorOutput); 
+    shoot(m_newMotorOutput); 
   }
 }
