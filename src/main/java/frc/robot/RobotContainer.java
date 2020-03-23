@@ -55,6 +55,7 @@ public class RobotContainer {
   private JoystickButton opButton4;
   private JoystickButton opButton5;
   private JoystickButton opButton6;
+  private JoystickButton opButton8;
 
 
   private AHRS ahrs;
@@ -102,6 +103,7 @@ public class RobotContainer {
   private final Command m_IntakeTestCmd;
   private final Command m_LiftCmd;
   private final Command m_CameraLightCmd;
+  private final Command m_CameraSelectCmd;
   private final Command m_FeedCommand;
   private final ExampleCommand m_autoCommand;
   Command m_autonomousCommand;
@@ -130,6 +132,7 @@ public class RobotContainer {
     opButton4 = new JoystickButton(OperatorControl, 4);
     opButton5 = new JoystickButton(OperatorControl, 5);
     opButton6 = new JoystickButton(OperatorControl, 6);
+    opButton8 = new JoystickButton(OperatorControl, 8);
     
 
     m_PDP = new PDP(); 
@@ -169,7 +172,7 @@ public class RobotContainer {
     //m_Falcon500Sub = new Falcon500Sub(falcon500);
      
     m_DriveTrain = new DriveTrain(leftDrive1, leftDrive2, rightDrive1, rightDrive2, m_NavX);
-    m_CameraSub = new CameraSub(camera1, camera2, camera3);
+    m_CameraSub = new CameraSub(camera1);
 
     m_IntakeTestCmd = new IntakeTestCommand(m_IntakeSub, DriverControl, driveButton2, driveButton3);
     m_LiftCmd = new LiftCommand(m_LiftSub, DriverControl, opButton5, opButton6, opButton1, opButton4);
@@ -179,6 +182,7 @@ public class RobotContainer {
     m_autoCommand = new ExampleCommand(m_exampleSubsystem);
     
     m_CameraLightCmd = new CameraLightCommand(m_CameraReflectLight, opButton2);
+    m_CameraSelectCmd = new CameraSelect();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -204,6 +208,7 @@ public class RobotContainer {
     opButton6.whileHeld(m_LiftCmd); //lift winch tighten
 
     opButton2.whenPressed(m_CameraLightCmd);
+    opButton8.whenPressed(m_CameraSelectCmd);
   }
 
   public void configDashboard() {

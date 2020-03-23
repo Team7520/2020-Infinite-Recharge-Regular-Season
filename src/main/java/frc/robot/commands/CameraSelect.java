@@ -9,14 +9,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 
 public class CameraSelect extends CommandBase {
   /**
    * Creates a new VisionActivate.
    */
-  String[] modes = { "intake", "shooter", "arm"};
+  private String[] modes = { "intake", "shooter", "arm"};
+  private Timer responseTimer;
+  private final double delayTime = 0.5;
 
-  public VisionActivate() {
+  public CameraSelect() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -24,17 +27,24 @@ public class CameraSelect extends CommandBase {
   @Override
   public void initialize() {
       
+    responseTimer = new Timer();
+    responseTimer.start();
       //SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      var mode = SmartDashboard.getString("/vision/active_mode", "intake");
-      var idx = java.util.Arrays.asList(modes).indexOf(mode);
-      if (idx<0) idx =0;
-      idx = (idx + 1 ) % 3;
-      SmartDashboard.putString("/vision/active_mode", modes[idx]);
+    if(responseTimer.hasElapsed(delayTime)){
+        var mode = SmartDashboard.getString("/vision/active_mode", "intake");
+        System.out.println("Carema Mode: " + mode);
+        var idx = java.util.Arrays.asList(modes).indexOf(mode);
+        if (idx<0) idx =0;
+        idx = (idx + 1 ) % 3;
+        SmartDashboard.putString("/vision/active_mode", modes[idx]);
+        System.out.println("Selected Carema Mode: " + modes[idx]);
+        responseTimer.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +55,6 @@ public class CameraSelect extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
